@@ -1,4 +1,4 @@
-## angular-couch-potato
+## angular-delay-register
 > Lazy-Load and Register Components in AngularJS Applications
 
 For documentation, please see

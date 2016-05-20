@@ -150,75 +150,6 @@
         }
       }
 
-      function resolve(dependencies, returnIndex, returnSubId) {
-        if (dependencies.dependencies) {
-          return resolveDependenciesProperty(
-            dependencies,
-            returnIndex,
-            returnSubId
-          );
-        }
-        else {
-          return resolveDependencies(dependencies, returnIndex, returnSubId);
-        }
-      }
-      this.resolve = resolve;
-
-      function resolveDependencies(dependencies, returnIndex, returnSubId) {
-        function delay($q, $rootScope) {
-
-          var defer = $q.defer();
-
-          require(dependencies, function() {
-            var args = Array.prototype.slice(arguments);
-
-            var out;
-
-            if (returnIndex === undefined) {
-              out = arguments[arguments.length - 1];
-            }
-            else {
-              argForOut = arguments[returnIndex];
-              if (returnSubId === undefined) {
-                out = argForOut;
-              }
-              else {
-                out = argForOut[returnSubId];
-              }
-            }
-
-            defer.resolve(out);
-            $rootScope.$apply();
-
-          });
-
-          return defer.promise;
-        }
-
-        delay.$inject = ['$q', '$rootScope'];
-        return delay;
-
-      }
-      this.resolveDependencies = resolveDependencies;
-
-      function resolveDependenciesProperty(configProperties) {
-        if (configProperties.dependencies) {
-          var resolveConfig = configProperties;
-          var deps = configProperties.dependencies;
-          delete resolveConfig['dependencies'];
-
-          resolveConfig.resolve = {};
-          resolveConfig.resolve.delay = resolveDependencies(deps);
-          return resolveConfig;
-        }
-        else
-        {
-          return configProperties;
-        }
-
-      }
-      this.resolveDependenciesProperty = resolveDependenciesProperty;
-
       /**
        *
        * @ngdoc object
@@ -247,10 +178,6 @@
         svc.registerController = registerController;
         svc.registerDecorator = registerDecorator;
         svc.registerProvider = registerProvider;
-
-        svc.resolveDependenciesProperty = resolveDependenciesProperty;
-        svc.resolveDependencies = resolveDependencies;
-        svc.resolve = resolve;
 
         return svc;
       };
@@ -457,6 +384,6 @@
     define(['angular'], function() { return new CouchPotato(window.angular); });
   }
   else {
-    window.couchPotato = new CouchPotato(angular);
+    window.couchPotato = new CouchPotato(window.angular);
   }
 }());
